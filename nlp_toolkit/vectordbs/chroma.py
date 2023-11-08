@@ -123,7 +123,7 @@ def deal_metadatas(metadatas):
                 if key in res_dict:
                     res_dict[key].append(item[key])
                 else:
-                    res_dict[key] = []
+                    res_dict[key] = [item[key]]
         return res_dict
             
     else:
