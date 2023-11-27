@@ -3,6 +3,8 @@ from transformers import AutoTokenizer, AutoModel
 import torch.nn.functional as F
 from dataclasses import dataclass
 import numpy as np
+from tqdm import tqdm
+from .chroma_adapter import make_chroma
 
 @dataclass
 class SentenceEmbedder:
@@ -19,7 +21,9 @@ class SentenceEmbedder:
         else:
             self.device = "cuda:0" if torch.cuda.is_available() else "cpu"
         self.model.to(self.device)
-
+        
+    def make_chroma(self):
+        return make_chroma(self)
 
     def _embed(self, sentences):
         encoder_input = self.tokenizer(sentences, padding = True, truncation = True, return_tensors = 'pt').to(self.device)
@@ -51,12 +55,10 @@ class SentenceEmbedder:
 
         subset_embeddings = []
 
-        for i in range(n_batchs):
-            print("Embedding Batch: {}".format(i + 1), end = "......")
+        for i in tqdm(range(n_batchs), total = n_batchs, desc = "Embedding Batches"):
             subset = texts[i * batch_size: (i+1) * batch_size]
             subset_embedding = self.embed_sentences(subset)
             subset_embeddings.append(subset_embedding)
-            print("Done.")
         return np.concatenate(subset_embeddings)
   
 

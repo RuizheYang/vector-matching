@@ -9,4 +9,6 @@ chromadb
 torch
 tensorflow
 sentencepiece
+nltk
+openai
 

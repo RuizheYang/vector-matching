@@ -89,7 +89,6 @@ def mean_seed_query(collection, ids, n:int = 10):
 
    results = collection.query(
       query_embeddings = [mean_vector.tolist()], 
-      include = ['metadatas','distances'],
       n_results = n)
    
    return results
@@ -102,32 +101,10 @@ def concat_text_query(collection, ids, n:int = 10):
 
    results = collection.query(
          query_texts = [query_text], 
-         include = ['metadatas','distances'],
          n_results = n)
    
    return results
     
-def deal_metadatas(metadatas):
-    res_dict = {}
-    if metadatas is None:
-        return res_dict
-    
-    if isinstance(metadatas,list):
-        try:
-            metadatas = metadatas[0]
-        except:
-            return res_dict
-        
-        for item in metadatas:
-            for key in item:
-                if key in res_dict:
-                    res_dict[key].append(item[key])
-                else:
-                    res_dict[key] = [item[key]]
-        return res_dict
-            
-    else:
-        raise TypeError('Metadatas is not correct type, must list!')
 
     
 
